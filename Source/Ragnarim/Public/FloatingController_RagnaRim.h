@@ -17,4 +17,18 @@ class RAGNARIM_API AFloatingController_RagnaRim : public APlayerController
 public:
 	// Sets default values for this pawn's properties
 	AFloatingController_RagnaRim();
+
+	// =============
+	// = Variables =
+	// =============
+
+	// Bool pour savoir si on dois afficher un ghost Bulding
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Building")
+	bool bGhostBuilding = false;
+
+	// Bool pour savoir si la grille à été crée
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Building")
+	bool bBuildingGrid = false;
+
+
 };
