@@ -3,14 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "SimpleBuilding.h"
-#include "ComplexBuilding.generated.h"
+#include "Building/BaseBuilding.h"
+#include "Door.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class RAGNARIM_API AComplexBuilding : public ASimpleBuilding
+class RAGNARIM_API ADoor : public ABaseBuilding
 {
 	GENERATED_BODY()
 	

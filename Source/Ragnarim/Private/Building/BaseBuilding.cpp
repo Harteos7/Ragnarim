@@ -1,10 +1,10 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "SimpleBuilding.h"
+#include "Building/BaseBuilding.h"
 
 // Sets default values
-ASimpleBuilding::ASimpleBuilding()
+ABaseBuilding::ABaseBuilding()
 {
     PrimaryActorTick.bCanEverTick = false;
 
@@ -17,14 +17,14 @@ ASimpleBuilding::ASimpleBuilding()
 }
 
 // Called when the game starts or when spawned
-void ASimpleBuilding::BeginPlay()
+void ABaseBuilding::BeginPlay()
 {
 	Super::BeginPlay();
 	
 }
 
 // Called every frame
-void ASimpleBuilding::Tick(float DeltaTime)
+void ABaseBuilding::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
