@@ -4,6 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "BuildingData.h"
+#include "Resource/MaterialData.h"
 #include "BaseBuilding.generated.h"
 
 UCLASS(Abstract, Blueprintable)
@@ -14,6 +16,9 @@ class RAGNARIM_API ABaseBuilding : public AActor
 public:	
 	// Sets default values for this actor's properties
 	ABaseBuilding();
+
+	// S'exécute quand on modifie l'objet dans l'éditeur ou quand il spawn
+    virtual void OnConstruction(const FTransform& Transform) override;
 
 protected:
 	// Called when the game starts or when spawned
@@ -27,8 +32,16 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
 	UStaticMeshComponent* MeshComponent;
 
-	// Le fichier 3D de référence pour ce bâtiment
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Building")
-	class UStaticMesh* BuildingMeshAsset;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
+	UBuildingData* BuildingData;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
+	UMaterialData* SelectedMaterial;
+
+	UPROPERTY(BlueprintReadWrite, Category = "Data")
+	float MaxHealth;
+
+	UPROPERTY(BlueprintReadWrite, Category = "Data")
+	float MaxBuildValue;
 
 };

@@ -16,6 +16,22 @@ ABaseBuilding::ABaseBuilding()
 
 }
 
+void ABaseBuilding::OnConstruction(const FTransform& Transform)
+{
+    Super::OnConstruction(Transform);
+
+    // On vérifie si les donnée sont bonne dans les data asset
+    if (BuildingData && BuildingData->BuildingStaticMesh && SelectedMaterial && MeshComponent)
+    {
+        MeshComponent->SetStaticMesh(BuildingData->BuildingStaticMesh);
+
+        MeshComponent->SetMaterial(0, SelectedMaterial->SurfaceMaterial);
+
+        MaxHealth = BuildingData->BaseHealth * SelectedMaterial->HealthMultiplier;
+        MaxBuildValue = BuildingData->BaseBuildValue * SelectedMaterial->BuildValueMultiplier;
+    }
+}
+
 // Called when the game starts or when spawned
 void ABaseBuilding::BeginPlay()
 {
