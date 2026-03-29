@@ -4,17 +4,17 @@
 
 #include "CoreMinimal.h"
 #include "Engine/DataAsset.h"
-#include "Game/RagnarimTypes.h"
-#include "BuildingData.generated.h"
+#include "GameplayTagContainer.h"
+#include "MaterialData.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class RAGNARIM_API UBuildingData : public UPrimaryDataAsset
+class RAGNARIM_API UMaterialData : public UPrimaryDataAsset
 {
 	GENERATED_BODY()
-
+	
 public:
 
     // --- VISUAL & UI ---
@@ -25,23 +25,22 @@ public:
     UTexture2D* Icon;
 
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Visual")
-    class UStaticMesh* BuildingStaticMesh;
+    UMaterialInterface* SurfaceMaterial;
 
 
 
 
     // --- LOGIC ---
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Logic")
-    EBuildingCategory Category;
-
+    FGameplayTagContainer UsageTags;
 
 
 
 
     // --- STATS ---
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Stats")
-    float BaseHealth = 100.0f;
+    float HealthMultiplier = 1.0f;
 
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Stats")
-    float BaseBuildValue = 5.0f;
+    float BuildValueMultiplier = 1.0f;
 };

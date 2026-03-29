@@ -6,6 +6,7 @@
 #include "GameFramework/Pawn.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
+#include "Game/RagnarimTypes.h"
 #include "GameFramework/FloatingPawnMovement.h"
 #include "FloatingCamera_Ragnarim.generated.h"
 
