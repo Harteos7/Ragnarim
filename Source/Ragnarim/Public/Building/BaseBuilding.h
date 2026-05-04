@@ -32,10 +32,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
 	UStaticMeshComponent* MeshComponent;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data", meta = (ExposeOnSpawn = "true"))
 	UBuildingData* BuildingData;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data", meta = (ExposeOnSpawn = "true"))
 	UMaterialData* SelectedMaterial;
 
 	UPROPERTY(BlueprintReadWrite, Category = "Data")

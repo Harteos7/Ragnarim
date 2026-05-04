@@ -10,5 +10,6 @@ enum class EBuildingCategory : uint8
     Furniture    UMETA(DisplayName = "Furniture"),
     Artisanat     UMETA(DisplayName = "Artisanat"),
     Research     UMETA(DisplayName = "Research"),
-    Defense      UMETA(DisplayName = "Defense")
+    Defense      UMETA(DisplayName = "Defense"),
+    Unbuildable      UMETA(DisplayName = "Unbuildable")
 };

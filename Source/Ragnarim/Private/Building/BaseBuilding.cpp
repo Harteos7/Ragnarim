@@ -30,6 +30,26 @@ void ABaseBuilding::OnConstruction(const FTransform& Transform)
         MaxHealth = BuildingData->BaseHealth * SelectedMaterial->HealthMultiplier;
         MaxBuildValue = BuildingData->BaseBuildValue * SelectedMaterial->BuildValueMultiplier;
     }
+    else if (GEngine)
+    {
+        FString ErrorMsg = FString::Printf(TEXT("Erreur sur %s : "), *GetName());
+
+        if (!BuildingData)
+            ErrorMsg += TEXT("BuildingData est NULL. ");
+        else if (!BuildingData->BuildingStaticMesh)
+            ErrorMsg += TEXT("Mesh dans BuildingData est NULL. ");
+
+        if (!SelectedMaterial)
+            ErrorMsg += TEXT("SelectedMaterial est NULL. ");
+
+        if (!MeshComponent)
+            ErrorMsg += TEXT("MeshComponent est NULL.");
+
+        GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, ErrorMsg);
+
+        // Optionnel : Log aussi dans la console (Output Log) pour garder une trace
+        UE_LOG(LogTemp, Warning, TEXT("%s"), *ErrorMsg);
+    }
 }
 
 // Called when the game starts or when spawned
