@@ -1,6 +1,8 @@
 /Binaries/*
 /DerivedDataCache/*
 /Intermediate/*
+/Plugins/*/Intermediate/*
+/Plugins/*/Binaries/*
 /Saved/*
 /Build/*
 .vscode/
