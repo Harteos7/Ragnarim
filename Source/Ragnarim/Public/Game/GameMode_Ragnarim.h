@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
@@ -13,5 +13,11 @@ UCLASS()
 class RAGNARIM_API AGameMode_Ragnarim : public AGameModeBase
 {
 	GENERATED_BODY()
-	
+
+public:
+
+    // Lazy Accessor
+    UFUNCTION(BlueprintPure, Category = "Ragnarim|Accessor", meta = (WorldContext = "WorldContextObject"))
+    static AGameMode_Ragnarim* GetGameModeRagnarim(const UObject* WorldContextObject);
+
 };

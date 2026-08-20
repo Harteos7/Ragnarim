@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+ï»¿// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
@@ -30,6 +30,10 @@ struct FMaterialList {
 };
 
 
+// DELEGATE
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnFrontChange, UFont*, NewFront);
+
+
 /**
  * 
  */
@@ -39,24 +43,26 @@ class RAGNARIM_API UGameInstance_Ragnarim : public UGameInstance
 	GENERATED_BODY()
 	
 public:
-    // Initialisation équivalent du BeginPlay pour la GameInstance
+    // Initialisation Ã©quivalent du BeginPlay pour la GameInstance
     virtual void Init() override;
 
     // Lazy Accessor
-    UFUNCTION(BlueprintPure, Category = "Ragnarim|Database", meta = (WorldContext = "WorldContextObject"))
-    static UGameInstance_Ragnarim* Get(const UObject* WorldContextObject);
+    UFUNCTION(BlueprintPure, Category = "Ragnarim|Accessor", meta = (WorldContext = "WorldContextObject"))
+    static UGameInstance_Ragnarim* GetGameInstanceRagnarim(const UObject* WorldContextObject);
 
 
-
+    // DELEGATE
+    UPROPERTY(BlueprintAssignable, BlueprintCallable, Category = "Game State")
+    FOnFrontChange OnFrontChangeDelegate;
 
 
     // --- DATABASES ---
 
-    // Bâtiments triés par Catégorie (Structure, Défense...)
+    // BÃ¢timents triÃ©s par CatÃ©gorie (Structure, DÃ©fense...)
     UPROPERTY(BlueprintReadOnly, Category = "Ragnarim|Database")
     TMap<EBuildingCategory, FBuildingList> BuildingDatabase;
 
-    // Matériaux triés par Tag (Usage.Building, Usage.Crafting...)
+    // MatÃ©riaux triÃ©s par Tag (Usage.Building, Usage.Crafting...)
     UPROPERTY(BlueprintReadOnly, Category = "Ragnarim|Database")
     TMap<FGameplayTag, FMaterialList> MaterialDatabase;
 

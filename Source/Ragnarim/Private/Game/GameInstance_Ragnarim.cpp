@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+Ôªø// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "Game/GameInstance_Ragnarim.h"
@@ -6,9 +6,9 @@
 #include "Kismet/GameplayStatics.h"
 
 
-UGameInstance_Ragnarim* UGameInstance_Ragnarim::Get(const UObject* WorldContextObject)
+UGameInstance_Ragnarim* UGameInstance_Ragnarim::GetGameInstanceRagnarim(const UObject* WorldContextObject)
 {
-    // On utilise UGameplayStatics pour rÈcupÈrer la Game Instance du monde actuel
+    // On utilise UGameplayStatics pour r√©cup√©rer la Game Instance du monde actuel
     return Cast<UGameInstance_Ragnarim>(UGameplayStatics::GetGameInstance(WorldContextObject));
 }
 
@@ -26,7 +26,7 @@ void UGameInstance_Ragnarim::RefreshAssetDatabase()
     FAssetRegistryModule& AssetRegistryModule = FModuleManager::LoadModuleChecked<FAssetRegistryModule>("AssetRegistry");
     TArray<FAssetData> AssetDataList;
 
-    // --- 1. SCAN DES B¬TIMENTS ---
+    // --- 1. SCAN DES B√ÇTIMENTS ---
     AssetRegistryModule.Get().GetAssetsByClass(UBuildingData::StaticClass()->GetClassPathName(), AssetDataList);
     for (const FAssetData& Asset : AssetDataList)
     {
@@ -38,14 +38,14 @@ void UGameInstance_Ragnarim::RefreshAssetDatabase()
 
     AssetDataList.Empty(); // On vide la liste temporaire pour le prochain scan
 
-    // --- 2. SCAN DES MAT…RIAUX ---
+    // --- 2. SCAN DES MAT√âRIAUX ---
     AssetRegistryModule.Get().GetAssetsByClass(UMaterialData::StaticClass()->GetClassPathName(), AssetDataList);
     for (const FAssetData& Asset : AssetDataList)
     {
         if (UMaterialData* Data = Cast<UMaterialData>(Asset.GetAsset()))
         {
-            // Un matÈriau peut avoir plusieurs tags (Bois = Construction + Craft)
-            // On l'ajoute donc dans chaque catÈgorie correspondante de la Map
+            // Un mat√©riau peut avoir plusieurs tags (Bois = Construction + Craft)
+            // On l'ajoute donc dans chaque cat√©gorie correspondante de la Map
             for (const FGameplayTag& Tag : Data->UsageTags)
             {
                 MaterialDatabase.FindOrAdd(Tag).Materials.Add(Data);
@@ -53,5 +53,5 @@ void UGameInstance_Ragnarim::RefreshAssetDatabase()
         }
     }
 
-    UE_LOG(LogTemp, Warning, TEXT("Database Ragnarim chargÈe : %d catÈgories de b‚timents."), BuildingDatabase.Num());
+    UE_LOG(LogTemp, Warning, TEXT("Database Ragnarim charg√©e : %d cat√©gories de b√¢timents."), BuildingDatabase.Num());
 }
