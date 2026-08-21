@@ -11,7 +11,7 @@
 AGameMode_Ragnarim* AGameMode_Ragnarim::GetGameModeRagnarim(const UObject* WorldContextObject)
 {
     // On utilise UGameplayStatics pour récupérer la Game Instance du monde actuel
-    return Cast<AGameMode_Ragnarim>(UGameplayStatics::GetGameInstance(WorldContextObject));
+    return Cast<AGameMode_Ragnarim>(UGameplayStatics::GetGameMode(WorldContextObject));
 }
 
 
