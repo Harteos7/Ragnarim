@@ -7,8 +7,8 @@
 #include "Engine/Engine.h"
 #include "TimerManager.h"
 #include "Kismet/GameplayStatics.h"
+#include "Components/TextBlock.h"
 #include "Components/Border.h"
-#include "Components/RichTextBlock.h"
 #include "Components/AudioComponent.h"
 #include "Sound/SoundBase.h"
 
@@ -73,20 +73,27 @@ void USubtitleComp::DisplaySubtitle(FText SubtitleText, float Duration, class US
 	// 1. On annule le chrono précédent manuellement par sécurité
 	World->GetTimerManager().ClearTimer(SubtitleTimerHandle);
 
-	// 2. On affiche le nouveau texte
-	// Récupérer le RichTextBlock nommé "SousTitre"
-	URichTextBlock* RichText = Cast<URichTextBlock>(SubtitleWidgetInstance->GetWidgetFromName(TEXT("SousTitre")));
-	if (!RichText && GEngine)
+	// 2a. Récupérer le Custom Widget (WBP_CustomText) qui s'appelle "SousTitre"
+	UUserWidget* CustomWidget = Cast<UUserWidget>(SubtitleWidgetInstance->GetWidgetFromName(TEXT("SousTitre")));
+	if (!CustomWidget && GEngine)
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Block SousTitre introuvable dans le widget"));
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("WBP_CustomText 'SousTitre' introuvable"));
+		return;
+	}
+
+	// 2b. Plonger DANS le Custom Widget pour trouver le vrai TextBlock
+	UTextBlock* InnerText = Cast<UTextBlock>(CustomWidget->GetWidgetFromName(TEXT("MainText")));
+	if (!InnerText && GEngine)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("TextBlock interne introuvable dans WBP_CustomText"));
 		return;
 	}
 
 	// Mettre à jour le texte
-	RichText->SetText(SubtitleText);
+	InnerText->SetText(SubtitleText);
 
 	// Rendre visible si besoin
-	RichText->SetVisibility(ESlateVisibility::Visible);
+	CustomWidget->SetVisibility(ESlateVisibility::Visible);
 
 	// Récupérer le Border nommé "Border"
 	UBorder* Border = Cast<UBorder>(SubtitleWidgetInstance->GetWidgetFromName(TEXT("Border")));
@@ -144,20 +151,21 @@ bool USubtitleComp::IsSubtitleOnScreen() const
 {
 	if (!SubtitleWidgetInstance) return false;
 
-	// Récupérer le RichTextBlock nommé "SousTitre"
-	URichTextBlock* RichText = Cast<URichTextBlock>(SubtitleWidgetInstance->GetWidgetFromName(TEXT("SousTitre")));
-	if (!RichText && GEngine)
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Block SousTitre introuvable dans le widget"));
-		return false;
-	}
+	// Récupérer le Custom Widget
+	UUserWidget* CustomWidget = Cast<UUserWidget>(SubtitleWidgetInstance->GetWidgetFromName(TEXT("SousTitre")));
+	if (!CustomWidget) return false;
 
-	if (!RichText->IsVisible())
+	// S'il n'est pas visible, le sous-titre n'est pas à l'écran
+	if (!CustomWidget->IsVisible())
 	{
 		return false;
 	}
 
-	if (RichText->GetText().IsEmpty())
+	// Plonger à l'intérieur pour vérifier si le texte est vide
+	UTextBlock* InnerText = Cast<UTextBlock>(CustomWidget->GetWidgetFromName(TEXT("MainText"))); // Pense à mettre le bon nom ici aussi
+	if (!InnerText) return false;
+
+	if (InnerText->GetText().IsEmpty())
 	{
 		return false;
 	}
@@ -181,16 +189,26 @@ void USubtitleComp::EndSubtitleTimer()
 
 	if (!SubtitleWidgetInstance) return;
 
-	// Récupérer le RichTextBlock nommé "SousTitre"
-	URichTextBlock* RichText = Cast<URichTextBlock>(SubtitleWidgetInstance->GetWidgetFromName(TEXT("SousTitre")));
-	if (!RichText && GEngine)
+	// 1. Récupérer le Custom Widget (WBP_CustomText)
+	UUserWidget* CustomWidget = Cast<UUserWidget>(SubtitleWidgetInstance->GetWidgetFromName(TEXT("SousTitre")));
+	if (CustomWidget)
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Block SousTitre introuvable dans le widget"));
-		return;
+		// 2. Plonger à l'intérieur pour trouver le vrai texte (TextBlock)
+		UTextBlock* InnerText = Cast<UTextBlock>(CustomWidget->GetWidgetFromName(TEXT("MainText")));
+		if (InnerText)
+		{
+			// Mettre à jour le texte avec un texte vide (GetEmpty() est plus optimisé que FromString(""))
+			InnerText->SetText(FText::GetEmpty());
+		}
+
+		// On masque également le Custom Widget par sécurité
+		CustomWidget->SetVisibility(ESlateVisibility::Collapsed);
+	}
+	else if (GEngine)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("WBP_CustomText 'SousTitre' introuvable dans le widget"));
 	}
 
-	// Mettre à jour le texte
-	RichText->SetText(FText::FromString(""));
 
 	// Récupérer le Border nommé "Border"
 	UBorder* Border = Cast<UBorder>(SubtitleWidgetInstance->GetWidgetFromName(TEXT("Border")));
