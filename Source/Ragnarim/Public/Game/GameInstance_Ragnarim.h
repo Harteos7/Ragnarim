@@ -31,7 +31,7 @@ struct FMaterialList {
 
 
 // DELEGATE
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnFrontChange, UFont*, NewFront);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnFontChange, UFont*, NewFront);
 
 
 /**
@@ -53,7 +53,7 @@ public:
 
     // DELEGATE
     UPROPERTY(BlueprintAssignable, BlueprintCallable, Category = "Game State")
-    FOnFrontChange OnFrontChangeDelegate;
+    FOnFontChange OnFontChangeDelegate;
 
 
     // --- DATABASES ---
