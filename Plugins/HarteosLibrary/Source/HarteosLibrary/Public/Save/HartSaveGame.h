@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+ï»¿// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
@@ -6,6 +6,22 @@
 #include "GameFramework/SaveGame.h"
 #include "HartSaveGame.generated.h"
 
+
+USTRUCT(BlueprintType)
+struct FSave
+{
+	GENERATED_BODY()
+
+	UPROPERTY(BlueprintReadWrite, Category = "Save HUD")
+	FString SaveName;
+
+	UPROPERTY(BlueprintReadWrite, Category = "Save HUD")
+	float TotalTimePlayed = 0.0f;
+
+	UPROPERTY(BlueprintReadWrite, Category = "Save HUD")
+	FDateTime SaveDate;
+
+};
 
 USTRUCT(BlueprintType)
 struct FActorSaveData
@@ -20,7 +36,7 @@ struct FActorSaveData
 	UPROPERTY(BlueprintReadWrite, Category = "Save Data")
 	FTransform Transform;
 
-	// 3. La "boîte noire" : Toutes ses variables spécifiques converties en binaire
+	// 3. La "boÃ®te noire" : Toutes ses variables spÃ©cifiques converties en binaire
 	UPROPERTY(BlueprintReadWrite, Category = "Save Data")
 	TArray<uint8> ByteData;
 };
@@ -36,19 +52,19 @@ class HARTEOSLIBRARY_API UHartSaveGame : public USaveGame
 	
 public :
     // Identifiant unique pour le slot de SauvegardeGlobal
-    UPROPERTY(VisibleAnywhere, Category = Basic)
+    UPROPERTY(VisibleAnywhere, Category = "Basic")
     FString SaveSlotName;
 
-    // Dictionnaire : Clé (FString : Nom de la save) -> Valeur (float : Temps de jeu)
+    // Listes de toute mes saves pour l'HUD
     UPROPERTY(VisibleAnywhere, Category = "Basic")
-    TMap<FString, float> MySaves;
+    TMap<FString, FSave> MySaves;
 
 };
 
 
 /**
- * Ceci est la "Boîte" propre au jeu.
- * Elle contient toutes les données que tu veux conserver.
+ * Ceci est la "BoÃ®te" propre au jeu.
+ * Elle contient toutes les donnÃ©es que je veux conserver.
  */
 UCLASS()
 class HARTEOSLIBRARY_API UMyGameSaveData : public USaveGame

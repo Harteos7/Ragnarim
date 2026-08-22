@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+ï»¿// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "GraphiqueLibrary.h"
@@ -99,7 +99,7 @@ void UGraphiqueLibrary::ChangerQualiteGlobal(int32 Qualite)
 	if (Settings)
 	{
 		Settings->SetOverallScalabilityLevel(Qualite);
-		Settings->ApplySettings(false); // le false c'est pour ne pas redémarer lors de l'application des settings
+		Settings->ApplySettings(false); // le false c'est pour ne pas redÃ©marer lors de l'application des settings
 		Settings->SaveSettings();
 	}
 }
@@ -129,7 +129,7 @@ void UGraphiqueLibrary::SetComboStringAntiAliasing(UComboBoxString* ComboString)
 	UGameUserSettings* Settings = UGameUserSettings::GetGameUserSettings();
 	if (!Settings) return;
 
-	ComboString->ClearOptions(); // Nettoyage au cas où
+	ComboString->ClearOptions(); // Nettoyage au cas oÃ¹
 	ComboString->AddOption(TEXT("Off"));  // Index 0
 	ComboString->AddOption(TEXT("FXAA")); // Index 1
 	ComboString->AddOption(TEXT("TAA"));  // Index 2
@@ -141,51 +141,53 @@ void UGraphiqueLibrary::SetComboStringAntiAliasing(UComboBoxString* ComboString)
 }
 
 
-void UGraphiqueLibrary::GetVsync(UTextBlock* TextBlock)
+FString UGraphiqueLibrary::GetVsync()
 {
 	UGameUserSettings* Settings = UGameUserSettings::GetGameUserSettings();
-	if (Settings && TextBlock)
+	if (Settings)
 	{
 		bool Vsync = Settings->IsVSyncEnabled();
 
 		if (Vsync)
 		{
-			TextBlock->SetText(FText::FromString("Vsync : On"));
+			return FString("Vsync : On");
 		}
 		else
 		{
-			TextBlock->SetText(FText::FromString("Vsync : Off"));
+			return FString("Vsync : Off");
 		}
 	}
 	else
 	{
-		UKismetSystemLibrary::PrintString(nullptr, "TextBlock mal définie", true, true, FColor::Red, 2.0f);
+		UKismetSystemLibrary::PrintString(nullptr, "Erreur setting dans le GetVsync", true, true, FColor::Red, 2.0f);
+		return FString("Vsync : Error");
 	}
 }
 
-void UGraphiqueLibrary::ChangerVsync(UTextBlock* TextBlock)
+FString UGraphiqueLibrary::ChangerVsync()
 {
 	UGameUserSettings* Settings = UGameUserSettings::GetGameUserSettings();
-	if (Settings && TextBlock)
+	if (Settings)
 	{
 		bool Vsync = Settings->IsVSyncEnabled();
 
 		if (Vsync)
 		{
-			TextBlock->SetText(FText::FromString("Vsync : Off"));
 			Settings->SetVSyncEnabled(false);
 			Settings->ApplySettings(false);
+			return FString("Vsync : Off");
 		}
 		else
 		{
-			TextBlock->SetText(FText::FromString("Vsync : On"));
 			Settings->SetVSyncEnabled(true);
 			Settings->ApplySettings(false);
+			return FString("Vsync : On");
 		}
 	}
 	else
 	{
-		UKismetSystemLibrary::PrintString(nullptr, "TextBlock mal définie", true, true, FColor::Red, 2.0f);
+		UKismetSystemLibrary::PrintString(nullptr, "Erreur setting dans le SetVsync", true, true, FColor::Red, 2.0f);
+		return FString("Vsync : Error");
 	}
 }
 
@@ -195,7 +197,7 @@ void UGraphiqueLibrary::ScrollResolution(float Value, FIntPoint ResolutionChoose
 	UGameUserSettings* Settings = UGameUserSettings::GetGameUserSettings();
 	if (Settings)
 	{
-		Value = Value / 100; // Pour mettre en facteur 0 à 1
+		Value = Value / 100; // Pour mettre en facteur 0 Ã  1
 		int ResolutionChooseX = FMath::TruncToInt(ResolutionChoose.X * Value);
 		int ResolutionChooseY = FMath::TruncToInt(ResolutionChoose.Y * Value);
 
@@ -318,11 +320,11 @@ FIntPoint UGraphiqueLibrary::ComboboxChangeResolution(FString Value)
 	// Extraction des valeurs "X=" et "Y="
 	if (FParse::Value(*Value, TEXT("X="), CurrentResolution.X) && FParse::Value(*Value, TEXT("Y="), CurrentResolution.Y))
 	{
-		UE_LOG(LogTemp, Log, TEXT("Résolution extraite : %d x %d"), CurrentResolution.X, CurrentResolution.Y);
+		UE_LOG(LogTemp, Log, TEXT("RÃ©solution extraite : %d x %d"), CurrentResolution.X, CurrentResolution.Y);
 	}
 	else
 	{
-		UE_LOG(LogTemp, Error, TEXT("Format de résolution invalide : %s"), *Value);
+		UE_LOG(LogTemp, Error, TEXT("Format de rÃ©solution invalide : %s"), *Value);
 	}
 
 	return CurrentResolution;

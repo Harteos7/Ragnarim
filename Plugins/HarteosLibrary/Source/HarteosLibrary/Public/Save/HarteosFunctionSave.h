@@ -10,20 +10,6 @@
 #include "Serialization/ObjectAndNameAsStringProxyArchive.h"
 #include "HarteosFunctionSave.generated.h"
 
-
-USTRUCT(BlueprintType)
-struct FSave
-{
-	GENERATED_BODY()
-
-	UPROPERTY(BlueprintReadWrite, Category = "Sauvegarde")
-	FString SaveName;
-
-	UPROPERTY(BlueprintReadWrite, Category = "Sauvegarde")
-	float TotalTimePlayed = 0.0f;
-
-};
-
 /**
  * 
  */

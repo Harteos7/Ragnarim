@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+ï»¿// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
@@ -6,7 +6,7 @@
 #include "Blueprint/UserWidget.h"
 #include "GraphiqueLibrary.generated.h"
 
-// Déclaration de l'ENUM pour centraliser tous les types de paramètres graphiques
+// DÃ©claration de l'ENUM pour centraliser tous les types de paramÃ¨tres graphiques
 UENUM(BlueprintType)
 enum class EQualityType : uint8
 {
@@ -37,7 +37,7 @@ public:
 
 
 
-	// --- LES DEUX FONCTIONS UNIQUES ET UNIFIÉES ---
+	// --- LES DEUX FONCTIONS UNIQUES ET UNIFIÃ‰ES ---
 	UFUNCTION(BlueprintCallable, Category = "Options Graphiques")
 	static void ChangerQualiteGraphique(EQualityType Type, int32 Qualite);
 
@@ -60,10 +60,10 @@ public:
 
 
 	UFUNCTION(BlueprintCallable, Category = "Options Graphiques")
-	static void ChangerVsync(UTextBlock* TextBlock);
+	static FString ChangerVsync();
 
 	UFUNCTION(BlueprintCallable, Category = "Options Graphiques")
-	static void GetVsync(UTextBlock* TextBlock);
+	static FString GetVsync();
 
 
 	UFUNCTION(BlueprintCallable, Category = "Options Graphiques")

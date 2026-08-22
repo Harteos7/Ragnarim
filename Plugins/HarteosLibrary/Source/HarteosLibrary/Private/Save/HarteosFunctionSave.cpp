@@ -24,7 +24,14 @@ void UHarteosFunctionSave::CreateSaveSlots(FString MySaveName, float TotalTimePl
 
 	if (SaveSlotMySaves)
 	{
-		SaveSlotMySaves->MySaves.Add(MySaveName, TotalTimePlayed);
+
+		FSave NewSaveInfo;
+		NewSaveInfo.SaveName = MySaveName;
+		NewSaveInfo.TotalTimePlayed = TotalTimePlayed;
+		NewSaveInfo.SaveDate = FDateTime::Now();
+
+
+		SaveSlotMySaves->MySaves.Add(MySaveName, NewSaveInfo);
 		UGameplayStatics::SaveGameToSlot(SaveSlotMySaves, "SaveSlotMySaves", 0);
 	}
 }
@@ -45,8 +52,13 @@ bool UHarteosFunctionSave::AddToSaveSlots(FString MySaveName, float TotalTimePla
 
 	if (!LoadedGame) return false;
 
+	FSave NewSaveInfo;
+	NewSaveInfo.SaveName = MySaveName;
+	NewSaveInfo.TotalTimePlayed = TotalTimePlayed;
+	NewSaveInfo.SaveDate = FDateTime::Now();
+
 	// Magie du TMap : s'il existe déjà, ça met le temps à jour. Sinon, ça le crée.
-	LoadedGame->MySaves.Add(MySaveName, TotalTimePlayed);
+	LoadedGame->MySaves.Add(MySaveName, NewSaveInfo);
 
 	return UGameplayStatics::SaveGameToSlot(LoadedGame, "SaveSlotMySaves", 0);
 
@@ -114,7 +126,7 @@ TArray<FSave> UHarteosFunctionSave::GetAllSaveGame()
 {
 	TArray<FSave> AllSaveMetadata;
 
-	// 1. On charge directement le fichier maître (Remplace l'ancien Reload_Save)
+	// 1. On charge directement le fichier maître
 	UHartSaveGame* MasterSave = Cast<UHartSaveGame>(UGameplayStatics::LoadGameFromSlot("SaveSlotMySaves", 0));
 
 	// Si le fichier maître n'existe pas, on retourne simplement un tableau vide
@@ -124,13 +136,9 @@ TArray<FSave> UHarteosFunctionSave::GetAllSaveGame()
 	}
 
 	// 2. On parcourt toutes les sauvegardes enregistrées dans le fichier maître
-	for (const TPair<FString, float>& SaveEntry : MasterSave->MySaves)
+	for (const TPair<FString, FSave>& SaveEntry : MasterSave->MySaves)
 	{
-		FSave SaveData;
-		SaveData.SaveName = SaveEntry.Key;
-		SaveData.TotalTimePlayed = SaveEntry.Value;
-
-		AllSaveMetadata.Add(SaveData);
+		AllSaveMetadata.Add(SaveEntry.Value);
 	}
 
 	return AllSaveMetadata;
@@ -168,7 +176,7 @@ bool UHarteosFunctionSave::DeleteAllSaveGames()
 	if (UHartSaveGame* MasterSave = Cast<UHartSaveGame>(UGameplayStatics::LoadGameFromSlot("SaveSlotMySaves", 0)))
 	{
 		// On parcourt le TMap pour supprimer les fichiers du disque dur
-		for (const TPair<FString, float>& SaveEntry : MasterSave->MySaves)
+		for (const TPair<FString, FSave>& SaveEntry : MasterSave->MySaves)
 		{
 			UGameplayStatics::DeleteGameInSlot(SaveEntry.Key, 0);
 		}
