@@ -75,4 +75,10 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Ragnarim|Database")
     void RefreshAssetDatabase();
 
+
+    // --- VARIABLES ---
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "HUD status")
+    UFont* FontUse;
+
 };
