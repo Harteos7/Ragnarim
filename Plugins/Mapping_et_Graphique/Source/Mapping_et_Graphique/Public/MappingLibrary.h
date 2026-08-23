@@ -57,6 +57,12 @@ public:
 	static void SaveSimpleFloatSave(FString NameOptionSave, float FloatToSave);
 
 	UFUNCTION(BlueprintCallable, Category = "Mapping")
+	static UFont* GetFontSave();
+
+	UFUNCTION(BlueprintCallable, Category = "Mapping")
+	static void SaveFontSave(UFont* FontToSave);
+
+	UFUNCTION(BlueprintCallable, Category = "Mapping")
 	static void UpdateSaveGame(UInputMappingContext* IMC, UInputAction* Action, FKey NewKey, int32 SlotIndex, bool bWantShift);
 
 

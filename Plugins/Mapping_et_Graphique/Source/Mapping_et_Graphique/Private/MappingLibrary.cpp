@@ -638,9 +638,9 @@ float UMappingLibrary::GetSimpleFloatSave(FString NameOptionSave)
 
 
 
-// =========================
+// =============================
 // =    SaveSimpleFloatSave    =
-// =========================
+// =============================
 void UMappingLibrary::SaveSimpleFloatSave(FString NameOptionSave, float FloatToSave)
 {
     UKeyBoardSave* SaveGameInstance = nullptr;
@@ -666,6 +666,79 @@ void UMappingLibrary::SaveSimpleFloatSave(FString NameOptionSave, float FloatToS
 
     // 3. Modifier les données
     SaveGameInstance->SaveSimpleFloat.Emplace(NameOptionSave, FloatToSave);
+
+    // 4. Sauvegarder sur le disque
+    bool bSuccess = UGameplayStatics::SaveGameToSlot(SaveGameInstance, "SettingGlobal", 0);
+
+    if (!bSuccess && GEngine)
+    {
+        GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("ÉCHEC: Impossible de sauvegarder dans le slot SettingGlobal."));
+    }
+}
+
+
+
+
+// =====================
+// =    GetFontSave    =
+// =====================
+UFont* UMappingLibrary::GetFontSave()
+{
+
+    if (!UGameplayStatics::DoesSaveGameExist("SettingGlobal", 0))
+    {
+        return nullptr;
+    }
+
+    UKeyBoardSave* LoadedGame = Cast<UKeyBoardSave>(UGameplayStatics::LoadGameFromSlot("SettingGlobal", 0));
+
+    if (LoadedGame && !LoadedGame->FontSave.IsNull())
+    {
+        // On charge l'asset en mémoire de manière synchrone (LoadSynchronous)
+        // Cela donne un UFont* classique
+        UFont* FontUtilisable = LoadedGame->FontSave.LoadSynchronous();
+
+        return FontUtilisable;
+    }
+
+    return nullptr;
+}
+
+
+
+
+
+// ======================
+// =    SaveFontSave    =
+// ======================
+void UMappingLibrary::SaveFontSave(UFont* FontToSave)
+{
+    UKeyBoardSave* SaveGameInstance = nullptr;
+
+    // 1. On essaie d'abord de charger la sauvegarde si elle existe
+    if (UGameplayStatics::DoesSaveGameExist("SettingGlobal", 0))
+    {
+        SaveGameInstance = Cast<UKeyBoardSave>(UGameplayStatics::LoadGameFromSlot("SettingGlobal", 0));
+    }
+
+    // 2. Si elle n'existait pas (ou que le chargement a échoué), on la crée
+    if (!SaveGameInstance)
+    {
+        SaveGameInstance = Cast<UKeyBoardSave>(UGameplayStatics::CreateSaveGameObject(UKeyBoardSave::StaticClass()));
+    }
+
+    // Garde-fou ultime au cas où il y aurait un bug critique du moteur
+    if (!SaveGameInstance)
+    {
+        if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("ERREUR CRITIQUE: Impossible de créer ou charger SettingGlobal"));
+        return;
+    }
+
+    if (FontToSave)
+    {
+        // On extrait le chemin propre de l'asset et on l'assigne à notre variable de sauvegarde
+        SaveGameInstance->FontSave = FontToSave;
+    }
 
     // 4. Sauvegarder sur le disque
     bool bSuccess = UGameplayStatics::SaveGameToSlot(SaveGameInstance, "SettingGlobal", 0);

@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include "CoreMinimal.h"
+#include "Engine/Font.h"
 #include "GameFramework/SaveGame.h"
 #include "KeyBoardSave.generated.h"
 
@@ -43,4 +44,8 @@ public:
     // Sauvegarder les sensibilités et autre réglages simple
     UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Settings")
     TMap<FString, float> SaveSimpleFloat;
+
+    // Sauvegarder du font
+    UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Settings")
+    TSoftObjectPtr<UFont> FontSave;
 };
