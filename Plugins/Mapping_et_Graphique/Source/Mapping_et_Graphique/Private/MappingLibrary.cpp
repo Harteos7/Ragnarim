@@ -590,10 +590,10 @@ FString UMappingLibrary::LoadKeyboardSave()
 
 
 
-// =====================================
-// =     GetMouseSensitivitySave	   =
-// =====================================
-float UMappingLibrary::GetMouseSensitivitySave()
+// =============================
+// =     GetSimpleFloatSave	   =
+// =============================
+float UMappingLibrary::GetSimpleFloatSave(FString NameOptionSave)
 {
 
     if (!UGameplayStatics::DoesSaveGameExist("SettingGlobal", 0))
@@ -613,81 +613,71 @@ float UMappingLibrary::GetMouseSensitivitySave()
         return 1.0f;
     }
 
-    // retourner la valeur sauvegarder
-    return LoadedGame->MouseSensitivitySave;
+    float* FoundFloat = LoadedGame->SaveSimpleFloat.Find(NameOptionSave);
+
+    if (FoundFloat != nullptr)
+    {
+        // retourner la valeur sauvegarder
+        return *FoundFloat;
+    }
+    else
+    {
+        //if (GEngine)
+        //{
+        //    GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Cyan,
+        //        FString::Printf(TEXT("Echec de l'extraction du float pour %s dans GetSimpleFloatSave"), *NameOptionSave));
+        //}
+
+        return 1.0f;
+    }
+
+
     
 }
 
 
 
 
-
-// =================================
-// =     SaveMouseSensitivity	   =
-// =================================
-void UMappingLibrary::SaveMouseSensitivity(float MouseSensitivity)
+// =========================
+// =    SaveSimpleFloatSave    =
+// =========================
+void UMappingLibrary::SaveSimpleFloatSave(FString NameOptionSave, float FloatToSave)
 {
+    UKeyBoardSave* SaveGameInstance = nullptr;
 
-
-
-    if (!UGameplayStatics::DoesSaveGameExist("SettingGlobal", 0))
+    // 1. On essaie d'abord de charger la sauvegarde si elle existe
+    if (UGameplayStatics::DoesSaveGameExist("SettingGlobal", 0))
     {
-        // Elle existe pas donc on la crée
-        UKeyBoardSave* SaveGameInstance = Cast<UKeyBoardSave>(
-            UGameplayStatics::CreateSaveGameObject(UKeyBoardSave::StaticClass())
-        );
+        SaveGameInstance = Cast<UKeyBoardSave>(UGameplayStatics::LoadGameFromSlot("SettingGlobal", 0));
+    }
 
-        if (!SaveGameInstance && GEngine)
-        {
-            GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("SaveGameInstance echec creation !!!"));
-            return; // Échec de la création
-        }
+    // 2. Si elle n'existait pas (ou que le chargement a échoué), on la crée
+    if (!SaveGameInstance)
+    {
+        SaveGameInstance = Cast<UKeyBoardSave>(UGameplayStatics::CreateSaveGameObject(UKeyBoardSave::StaticClass()));
+    }
 
-        SaveGameInstance->MouseSensitivitySave = MouseSensitivity;
-
-        bool bSuccessAdd = UGameplayStatics::SaveGameToSlot(SaveGameInstance, "SettingGlobal", 0);
-
-        if (!bSuccessAdd && GEngine)
-        {
-            FString DebugMessage = FString::Printf(TEXT("UMappingLibrary::SettingGlobal - Failed to save game to slot"));
-            GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, DebugMessage);
-        }
-
+    // Garde-fou ultime au cas où il y aurait un bug critique du moteur
+    if (!SaveGameInstance)
+    {
+        if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("ERREUR CRITIQUE: Impossible de créer ou charger SettingGlobal"));
         return;
     }
 
+    // 3. Modifier les données
+    SaveGameInstance->SaveSimpleFloat.Emplace(NameOptionSave, FloatToSave);
 
+    // 4. Sauvegarder sur le disque
+    bool bSuccess = UGameplayStatics::SaveGameToSlot(SaveGameInstance, "SettingGlobal", 0);
 
-
-
-    // Elle existe donc on la charge
-    UKeyBoardSave* LoadedGame = Cast<UKeyBoardSave>(
-        UGameplayStatics::LoadGameFromSlot("SettingGlobal", 0)
-    );
-
-    if (!LoadedGame)
+    if (!bSuccess && GEngine)
     {
-        FString DebugMessage = FString::Printf(TEXT("ERREUR: Sauvegarde SettingGlobal introuvable alors que normalement si."));
-        GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, DebugMessage);
-        return;
+        GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("ÉCHEC: Impossible de sauvegarder dans le slot SettingGlobal."));
     }
-
-    // Modifier les données (modifier le temps puis les acteurs)
-    LoadedGame->MouseSensitivitySave = MouseSensitivity;
-
-    // Ré-enregistrer l'objet dans le même slot
-    bool bSuccessChange = UGameplayStatics::SaveGameToSlot(LoadedGame, "SettingGlobal", 0);
-
-    if (!bSuccessChange && GEngine)
-    {
-        if (GEngine)
-        {
-            FString DebugMessage = FString::Printf(TEXT("ÉCHEC: Modification de la sauvegarde SettingGlobal."));
-            GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, DebugMessage);
-        }
-    }
-
 }
+
+
+
 
 
 

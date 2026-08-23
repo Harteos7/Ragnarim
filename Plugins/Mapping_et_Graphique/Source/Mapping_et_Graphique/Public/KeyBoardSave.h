@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "GameFramework/SaveGame.h"
@@ -34,13 +34,13 @@ class MAPPING_ET_GRAPHIQUE_API UKeyBoardSave : public USaveGame
 public:
     // La langue du clavier ou config choisie par le joueur
     UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Settings")
-    FString KeyboardLayout = "fr-FR"; // valeur par d�faut
+    FString KeyboardLayout = "fr-FR"; // valeur par défaut
 
     // Tableau de touches avec FKey et FString
     UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Settings")
     TArray<FInputActionKey> SaveInputAction_Key;
 
-    // Sauvegarder Mouse Sensitivity
+    // Sauvegarder les sensibilités et autre réglages simple
     UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Settings")
-    float MouseSensitivitySave = 1.0f; // valeur par d�faut
+    TMap<FString, float> SaveSimpleFloat;
 };

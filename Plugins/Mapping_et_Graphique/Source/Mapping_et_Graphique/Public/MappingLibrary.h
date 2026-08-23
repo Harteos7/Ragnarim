@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "InputMappingContext.h"
@@ -46,15 +46,15 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Mapping")
 	static void ClearInputAction_Key();
 
-	// Retourne le nom propre d'une touche (corrige l'AZERTY) � partir d'une FKey
+	// Retourne le nom propre d'une touche (corrige l'AZERTY) à partir d'une FKey
 	UFUNCTION(BlueprintPure, Category = "Inputs|Mapping")
 	static FText GetCleanKeyDisplayName(FKey Key);
 
 	UFUNCTION(BlueprintCallable, Category = "Mapping")
-	static float GetMouseSensitivitySave();
+	static float GetSimpleFloatSave(FString NameOptionSave);
 
 	UFUNCTION(BlueprintCallable, Category = "Mapping")
-	static void SaveMouseSensitivity(float MouseSensitivity);
+	static void SaveSimpleFloatSave(FString NameOptionSave, float FloatToSave);
 
 	UFUNCTION(BlueprintCallable, Category = "Mapping")
 	static void UpdateSaveGame(UInputMappingContext* IMC, UInputAction* Action, FKey NewKey, int32 SlotIndex, bool bWantShift);
